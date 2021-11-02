@@ -73,12 +73,19 @@ def contest_submit(request, contest_id, problem_id=0):
             submission.save()
 
             sqs = boto3.resource('sqs')
-
             queue = sqs.get_queue_by_name(QueueName='heoj_judge_queue.fifo')
+            queue.send_message(MessageBody=json.dumps(
+                {
+                    "submission_id": submission.id,
+                    "code": submission.code,
+                    "lang": submission.language,
+                    "problem_id": id,
+                    "time_limit": submission.problem.time_limit,
+                    "memory_limit": submission.problem.memory_limit,
+                }
+            ), MessageGroupId='judge',)
 
-            queue.send_message(MessageBody=json.dumps({"id": submission.pk, "code": submission.code}), MessageGroupId='judge',)
-
-            return redirect('contest/mystatus', id=contest_id)
+            return redirect('contest_mystatus', id=contest_id)
     else:
         form = SubmitSubmissionForm()
 
@@ -100,5 +107,4 @@ def contest_status(request, id, page=1):
     return render(request, 'contest/status.html')
 
 def contest_mystatus(request, id, page=1):
-    
     return render(request, 'contest/my_status.html')

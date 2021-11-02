@@ -47,9 +47,7 @@ def submit(request, id):
             submission.save()
 
             sqs = boto3.resource('sqs')
-
             queue = sqs.get_queue_by_name(QueueName='heoj_judge_queue.fifo')
-
             queue.send_message(MessageBody=json.dumps(
                 {
                     "submission_id": submission.id,
@@ -58,7 +56,6 @@ def submit(request, id):
                     "problem_id": id,
                     "time_limit": problem.time_limit,
                     "memory_limit": problem.memory_limit,
-
                 }), MessageGroupId='judge',)
 
             return redirect('problem_mystatus', id=id)
