@@ -1,0 +1,78 @@
+{% load static %}
+{% load extra_tags %}
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.3/codemirror.min.js" integrity="sha512-hGVnilhYD74EGnPbzyvje74/Urjrg5LSNGx0ARG1Ucqyiaz+lFvtsXk/1jCwT9/giXP0qoXSlVDjxNxjLvmqAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.3/codemirror.min.css" integrity="sha512-6sALqOPMrNSc+1p5xOhPwGIzs6kIlST+9oGWlI4Wwcbj1saaX9J3uzO3Vub016dmHV7hM+bMi/rfXLiF5DNIZg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.3/addon/mode/loadmode.min.js" integrity="sha512-oGyW28fDClI1MCVFG1N1hC3OCoYAzOUGkK5XJ1PxibLkCVXcUlqj9Fbrdy8hoVJ2xDKF3SBhOgWkgzxICt9s6A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.3/addon/mode/simple.min.js" integrity="sha512-9YoNYsegWvbA5aiSshQ2BNW2FAq3CQVLqpg2r6urw9Tfl1GklM9PNgrMRVz8fhEtjM+uZfO/1X3RURkMcil8wg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.3/mode/clike/clike.min.js" integrity="sha512-GAled7oA9WlRkBaUQlUEgxm37hf43V2KEMaEiWlvBO/ueP2BLvBLKN5tIJu4VZOTwo6Z4XvrojYngoN9dJw2ug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.3/mode/python/python.min.js" integrity="sha512-/mavDpedrvPG/0Grj2Ughxte/fsm42ZmZWWpHz1jCbzd5ECv8CB7PomGtw0NAnhHmE/lkDFkRMupjoohbKNA1Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.3/theme/darcula.min.css" integrity="sha512-kqCOYFDdyQF4JM8RddA6rMBi9oaLdR0aEACdB95Xl1EgaBhaXMIe8T4uxmPitfq4qRmHqo+nBU2d1l+M4zUx1g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.3/mode/meta.min.js" integrity="sha512-/2x+sfL5ERHfoViXm/UncFBzaD54f2bkjEui6w2IheEUafG2gcHJv3gQ4VDIqNr+LuApQwpnsjjrEMXI43nPzg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link href="{% static 'base.css' %}" rel="stylesheet"/>
+        <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+    </head>
+    <body>
+        <div class="bg-light">
+            <nav class="navbar navbar-expand-md navbar-light">
+                <div class="container">
+                    <a class="navbar-brand" href="/">
+                        <img src="{% static 'logo.png' %}" alt="" width="262" height="60">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse flex-md-column" id="navbarNav">
+                        <ul class="navbar-nav justify-content-end small w-100 mb-2">
+                            {% if user.is_authenticated %}
+                            <li class="nav-item">
+				    <a class="nav-link border-end border-secondary p-0 pe-2 m-2 me-0" href="{% url 'profile' user.username %}">{{ user.username }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout">로그아웃</a>
+                            </li>
+                            {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link border-end border-secondary p-0 pe-2 m-2 me-0" href="/login">로그인</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/register">회원가입</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        <ul class="navbar-nav w-100 nav-fill">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'problemset' %}">문제</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'contests' %}">대회</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'ranking' %}">랭킹</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="javascript:void(0);" onclick="alert('제한된 자원으로 인해 비활성화된 기능입니다.')">게시판</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/help">도움말</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+	{% if user.is_authenticated %}
+        {% block content %}
+        {% endblock %}
+	{% else %}
+	<div class="container py-5">
+		<p>모든 서비스는 <a href='/login'>로그인</a> 이후 사용 가능합니다.</p>
+	{% endif %}
+    </body>
+</html>

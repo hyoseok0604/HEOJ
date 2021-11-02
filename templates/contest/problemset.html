@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}대회 목록{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="py-3">
+        <ul class="nav nav-tabs">
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'contest' contest.pk %}">정보</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link active" aria-current="page" href="#">문제</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'contest_submit' contest.pk %}">제출</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'contest_status' contest.pk %}">채점 현황</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'contest_mystatus' contest.pk %}">내 제출</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'contest_scoreboard' contest.pk %}">스코어보드</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="table-responsive py-3">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="width:10%">번호</th>
+                    <th style="width:90%">제목</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alpha, problem in problemset %}
+                <tr>
+                    <td>{{ alpha }}</td>
+                    <td>
+                    <a class="text-decoration-none" href="{% url 'contest_problem' contest.pk forloop.counter %}">{{ problem.title }}</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+{% endblock content %}

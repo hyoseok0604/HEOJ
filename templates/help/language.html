@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}도움말{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="py-3">
+        <h1 class="border-bottom py-2">컴파일, 실행 옵션</h1>
+    </div>
+
+    <div class="py-3">
+        <h3 calss="py-2">C++11</h3>
+        <ul>
+            <li class="py-1">컴파일 : <code>/usr/bin/g++ -DONLINE_JUDGE -O2 -w -fmax-errors=3 -std=c++11 main.cpp -lm -o main</code></li>
+            <li class="py-1">실행 : <code>./main</code></li>
+        </ul>
+    </div>
+
+    <div class="py-3">
+        <h3 calss="py-2">C++14</h3>
+        <ul>
+            <li class="py-1">컴파일 : <code>/usr/bin/g++ -DONLINE_JUDGE -O2 -w -fmax-errors=3 -std=c++14 main.cpp -lm -o main</code></li>
+            <li class="py-1">실행 : <code>./main</code></li>
+        </ul>
+    </div>
+
+    <div class="py-3">
+        <h3 calss="py-2">C++17</h3>
+        <ul>
+            <li class="py-1">컴파일 : <code>/usr/bin/g++ -DONLINE_JUDGE -O2 -w -fmax-errors=3 -std=c++17 main.cpp -lm -o main</code></li>
+            <li class="py-1">실행 : <code>./main</code></li>
+        </ul>
+    </div>
+
+    <div class="py-3">
+        <h3 calss="py-2">C++20</h3>
+        <ul>
+            <li class="py-1">컴파일 : <code>/usr/bin/g++ -DONLINE_JUDGE -O2 -w -fmax-errors=3 -std=c++20 main.cpp -lm -o main</code></li>
+            <li class="py-1">실행 : <code>./main</code></li>
+        </ul>
+    </div>
+
+    <div class="py-3">
+        <h3 calss="py-2">C11</h3>
+        <ul>
+            <li class="py-1">컴파일 : <code>/usr/bin/gcc -DONLINE_JUDGE -O2 -w -fmax-errors=3 -std=c11 main.c -lm -o main</code></li>
+            <li class="py-1">실행 : <code>./main</code></li>
+        </ul>
+    </div>
+
+    <div class="py-3">
+        <h3 calss="py-2">C90</h3>
+        <ul>
+            <li class="py-1">컴파일 : <code>/usr/bin/gcc -DONLINE_JUDGE -O2 -w -fmax-errors=3 -std=c90 main.c -lm -o main</code></li>
+            <li class="py-1">실행 : <code>./main</code></li>
+        </ul>
+    </div>
+
+    <div class="py-3">
+        <h3 calss="py-2">C99</h3>
+        <ul>
+            <li class="py-1">컴파일 : <code>/usr/bin/gcc -DONLINE_JUDGE -O2 -w -fmax-errors=3 -std=c99 main.c -lm -o main</code></li>
+            <li class="py-1">실행 : <code>./main</code></li>
+        </ul>
+    </div>
+
+    <div class="py-3">
+        <h3 calss="py-2">Python2</h3>
+        <ul>
+            <li class="py-1">컴파일 : <code>/usr/bin/python -m py_compile main.py</code></li>
+            <li class="py-1">실행 : <code>/usr/bin/python main.pyc</code></li>
+        </ul>
+    </div>
+
+    <div class="py-3">
+        <h3 calss="py-2">Python3</h3>
+        <ul>
+            <li class="py-1">컴파일 : <code>/usr/bin/python3 -m py_compile main.py</code></li>
+            <li class="py-1">실행 : <code>/usr/bin/python3 __pycache__/main.cpython-36.pyc</code></li>
+        </ul>
+    </div>
+
+    <div class="py-3">
+        <h3 calss="py-2">Java8</h3>
+        <ul>
+            <li class="py-1">컴파일 : <code>/usr/lib/jvm/java-8-openjdk-amd64/bin/javac Main.java -d . -encoding UTF8</code></li>
+            <li class="py-1">실행 : <code>/usr/lib/jvm/java-8-openjdk-amd64/bin/java -cp . -XX:MaxRAM={MAX_MEMORY}k -Djava.security.manager -Dfile.encoding=utf-8 -Djava.security.policy==/home/java_policy -Djava.awt.headless=true Main</code></li>
+        </ul>
+    </div>
+
+    <div class="py-3">
+        <h3 calss="py-2">Java11</h3>
+        <ul>
+            <li class="py-1">컴파일 : <code>/usr/lib/jvm/java-11-openjdk-amd64/bin/javac Main.java -d . -encoding UTF8</code></li>
+            <li class="py-1">실행 : <code>/usr/lib/jvm/java-11-openjdk-amd64/bin/java -cp . -XX:MaxRAM={MAX_MEMORY}k -Djava.security.manager -Dfile.encoding=utf-8 -Djava.security.policy==/home/java_policy -Djava.awt.headless=true Main</code></li>
+        </ul>
+    </div>
+</div>
+{% endblock content %}
+

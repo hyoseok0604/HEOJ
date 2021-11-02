@@ -1,0 +1,111 @@
+{% extends 'problem/problem_base.html' %}
+
+{% block title %}{{ problem.number}}번 - {{ problem.title }}{% endblock title %}
+
+{% block problem_content %}
+<div class="container py-5">
+
+    <div class="py-3">
+        <ul class="nav nav-tabs">
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link active" aria-current="page" href="#">{{ problem.number }}번</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'problem_submit' problem.number %}">제출</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'problem_rank' problem.number %}">랭킹</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'problem_status' problem.number %}">채점 현황</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'problem_mystatus' problem.number %}">내 제출</a>
+            </li>
+        </ul>
+    </div>
+    
+    <h1 class="border-bottom py-2">{{ problem.title }}</h1>
+
+    <div class="table-responsive py-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="small" style="width:16%">시간 제한</th>
+                    <th class="small" style="width:16%">메모리 제한</th>
+                    <th class="small" style="width:16%">제출</th>
+                    <th class="small" style="width:16%">정답</th>
+                    <th class="small" style="width:16%">오답</th>
+                    <th class="small" style="width:16%">만든 사람</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="small">
+                    <td>{{ problem.time_limit }} 초</td>
+                    <td>{{ problem.memory_limit }} MB</td>
+                    <td>{{ problem.submission_set.count }}</td>
+                    <td>{{ problem.accepted }}</td>
+                    <td>{{ problem.wrong_answer }}</td>
+                    <td>{{ problem.author.username }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-12 py-3">
+        <h3 class="border-bottom pb-2">문제</h3>
+        <p>{{ problem.description }}</p>
+    </div>
+
+    {% if problem.input_description %}
+    <div class="col-md-12 py-3">
+        <h3 class="border-bottom pb-2">입력</h3>
+        <p>{{ problem.input_description }}</p>
+    </div>
+    {% endif %}
+
+    {% if problem.output_description %}
+    <div class="col-md-12 py-3">
+        <h3 class="border-bottom pb-2">출력</h3>
+        <p>{{ problem.output_description }}</p>
+    </div>
+    {% endif %}
+
+    {% if problem.limit_description %}
+    <div class="col-md-12 py-3">
+        <h3 class="border-bottom pb-2">제한</h3>
+        <p>{{ problem.limit_description }}</p>
+    </div>
+    {% endif %}
+    
+    <div class="col-md-12 py-3">
+        {% for input, output in examples %}
+        <div class="row">
+            <div class="col-md-6">
+                <section>
+                    <h3 class="border-bottom pb-2">예제 입력 {{ forloop.counter }}
+                        <button type="button" class="btn btn-link btn-copy text-decoration-none p-0" data-clipboard-target="#sample-input-{{ forloop.counter }}">복사</button>
+                    </h3>
+                    <pre class="sampledata p-2 fs-6" id="sample-input-{{ forloop.counter }}">{{ input }}</pre>
+                </section>
+            </div>
+            <div class="col-md-6">
+                <section>
+                    <h3 class="border-bottom pb-2">예제 출력 {{ forloop.counter }}
+                        <button type="button" class="btn btn-link btn-copy text-decoration-none p-0" data-clipboard-target="#sample-output-{{ forloop.counter }}">복사</button>
+                    </h3>
+                    <pre class="sampledata p-2 fs-6" id="sample-output-{{ forloop.counter }}">{{ output }}</pre>
+                </section>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+var clipboard = new ClipboardJS('.btn-copy');
+clipboard.on('success', function (e) {
+    e.clearSelection();
+});
+</script>
+{% endblock problem_content %}

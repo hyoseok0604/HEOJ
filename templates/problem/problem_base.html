@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+{% if not problem.is_public %}
+<div class="container py-5">
+<p>대회에 사용중인 문제입니다.</p>
+</div>
+{% elif not problem.visible %}
+<div class="container py-5">
+<p>비공개 문제입니다.</p>
+</div>
+{% else %}
+{% block problem_content %}{% endblock problem_content %}
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}대회 목록{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="width:40%">제목</th>
+                    <th style="width:20%">시작</th>
+                    <th style="width:20%">종료</th>
+                    <th style="width:20%">상태</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contest in contest_running %}
+                <tr>
+                    <td><a class="text-decoration-none" href="/contest/{{ contest.pk }}">{{ contest.title }}</a></td>
+                    <td>{{ contest.start_time | date:"Y년 m월 d일 G:i" }}</td>
+                    <td>{{ contest.end_time | date:"Y년 m월 d일 G:i" }}</td>
+                    <td>진행 중</td>
+                </tr>
+                {% endfor %}
+                {% for contest in contest_before %}
+                <tr>
+                    <td><a class="text-decoration-none" href="/contest/{{ contest.pk }}">{{ contest.title }}</a></td>
+                    <td>{{ contest.start_time | date:"Y년 m월 d일 G:i" }}</td>
+                    <td>{{ contest.end_time | date:"Y년 m월 d일 G:i" }}</td>
+                    <td class="real-time-update" data-timestamp-start="{% now "U" %}" data-timestamp="{{contest.start_time | date:"U"}}"></td>
+                </tr>
+                {% endfor %}
+                {% for contest in contest_after %}
+                <tr>
+                    <td><a class="text-decoration-none" href="/contest/{{ contest.pk }}">{{ contest.title }}</a></td>
+                    <td>{{ contest.start_time | date:"Y년 m월 d일 G:i" }}</td>
+                    <td>{{ contest.end_time | date:"Y년 m월 d일 G:i" }}</td>
+                    <td>종료됨</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function startTimer(target) {
+    var start = parseInt(target.getAttribute("data-timestamp-start"), 10);
+    var end = parseInt(target.getAttribute("data-timestamp"), 10);
+
+    var duration = end - start;
+
+    var d, h, m, s;
+    var intervalId = setInterval(function() {
+        s = parseInt(duration % 60, 10);
+        m = parseInt(duration / 60 % 60, 10);
+        h = parseInt(duration / 60 / 60 % 24, 10);
+        d = parseInt(duration / 60 / 60 / 24, 10);
+
+        s = s < 10 ? "0" + s : s;
+        m = m < 10 ? "0" + m : m;
+        h = h < 10 ? "0" + h : h;
+
+        target.textContent = d + "일 " + h + ":" + m + ":" + s + " 후 시작";
+
+        if(--duration < 0) {
+            target.textContent = "진행 중";
+            clearInterval(intervalId);
+        }
+    }, 1000);
+}
+
+window.onload = function() {
+    const targets = document.querySelectorAll(".real-time-update");
+
+    targets.forEach(function(target) {
+        startTimer(target)
+    });
+}
+
+</script>
+{% endblock content %}

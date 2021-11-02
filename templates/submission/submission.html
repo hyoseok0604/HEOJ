@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}{{submission.pk}}번 제출{% endblock title %}
+
+{% block content %}
+{% if user == submission.author %}
+<div class="container py-5">
+    <textarea class="codemirror-textarea">{{ submission.code }}</textarea>
+    <script>
+        var target = document.querySelector(".codemirror-textarea");
+        var editor = CodeMirror.fromTextArea(target, {
+            lineNumbers : true,
+            theme : "darcula",
+        })
+
+        
+        var info = CodeMirror.findModeByExtension("cpp");
+        if(info){
+            mode = info.mode;
+            spec = info.mime;
+        }
+
+        if(mode) {
+            editor.setOption("mode", spec);
+            CodeMirror.autoLoadMode(editor, mode);
+        }
+        
+    </script>
+
+    <div class="table-responsive py-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="small" style="width:6%">제출 번호</th>
+                    <th class="small" style="width:6%">문제</th>
+                    <th class="small" style="width:20%">문제 제목</th>
+                    <th class="small" style="width:10%">제출한 사람</th>
+                    <th class="small" style="width:12%">결과</th>
+                    <th class="small" style="width:9%">시간</th>
+                    <th class="small" style="width:9%">메모리</th>
+                    <th class="small" style="width:10%">언어</th>
+                    <th class="small" style="width:18%">제출한 시각</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="small">
+                    <td>{{ submission.pk }}</td>
+                    <td><a class="text-decoration-none" href="/problem/{{ submission.problem.number }}">{{ submission.problem.number }}</a></td>
+                    <td>{{ submission.problem.title }}</td>
+                    <td>{{ submission.author.username }}</td>
+                    <td class="fw-bold {{ submission.result|result_color }}">{{ submission.get_result_display }}</td>
+		    <td>{% if submission.time != None %}{{ submission.time }} <span class="text-danger">ms</span>{% endif %}</td>
+		    <td>{% if submission.memory != None %}{{ submission.memory }} <span class="text-danger">KB</span>{% endif %}</td>
+                    <td>{{ submission.get_language_display }}</td>
+                    <td>{{ submission.submit_time | date:"Y년 m월 d일 G:i" }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="container py-5">
+    <p>해당 제출을 볼 권한이 없습니다.</p>
+</div>
+{% endif %}
+{% endblock content %}

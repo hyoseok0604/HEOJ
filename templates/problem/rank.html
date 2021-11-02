@@ -1,0 +1,84 @@
+{% extends 'problem/problem_base.html' %}
+
+{% block title %}{{ problem.number }}번 랭킹 - {{ current_page }}페이지{% endblock title %}
+
+{% block problem_content %}
+<div class="container py-5">
+
+    <div class="py-3">
+        <ul class="nav nav-tabs">
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'problem' problem.number %}">{{ problem.number }}번</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" aria-current="page"  href="{% url 'problem_submit' problem.number %}">제출</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark active" href="{% url 'problem_rank' problem.number %}">랭킹</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'problem_status' problem.number %}">채점 현황</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'problem_mystatus' problem.number %}">내 제출</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="py-3">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered small">
+                <thead>
+                    <tr>
+                        <th style="width:5%">순위</th>
+                        <th style="width:10%">제출 번호</th>
+                        <th style="width:10%">아이디</th>
+                        <th style="width:10%">문제</th>
+                        <th style="width:20%">결과</th>
+                        <th style="width:10%">시간</th>
+                        <th style="width:10%">메모리</th>
+                        <th style="width:10%">언어</th>
+                        <th style="width:15%">제출 시각</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% widthratio page|add:"-1" 1 20 as base%}
+                    {% for status in statuses %}
+                    <tr>
+                        <td>{{ base|add:forloop.counter }}</td>
+			<td>
+			{% if status.author == user %}
+			    <a class="text-decoration-none" href="/submission/{{ status.id }}">{{ status.pk }}</a>
+			{% else %}
+			    {{ status.id }}
+			{% endif %}
+			</td>
+                        <td>{{ status.author.username }}</td>
+                        <td><a class="text-decoration-none" href="{% url 'problem' problem.number %}">{{ status.problem.number }}</a></td>
+                        <td class="fw-bold {{ status.result|result_color }}">{{ status.get_result_display }}</td>
+                        <td>{% if status.time != None %}{{ status.time }} <span class="text-danger">ms</span{% endif %}</td>
+			<td>{% if status.memory != None %}{{ status.memory }} <span class="text-danger">KB</span>{% endif %}</td>
+                        <td>{{ status.get_language_display }}</td>
+                        <td>{{ status.submit_time | date:"Y년 m월 d일 G:i" }}</td>
+                    </th>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="text-center">
+            <ul class="pagination justify-content-center">
+                {% for i in page_count %}
+                    {% ifequal current_page i %}
+                    <li class="page-item active"><a class="page-link" href="{% url 'problem_rank' i %}">{{ i }}</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="{% url 'problem_rank' i %}">{{ i }}</a></li>
+                    {% endifequal %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock problem_content %}

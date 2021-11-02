@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}랭킹{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="width:20%">아이디</th>
+                    <th style="width:70%">한 줄 소개</th>
+                    <th style="width:10%">맞은 문제</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rank in rank_data %}
+                <tr>
+                    <td>{{ rank.username }}</td>
+                    <td>{{ rank.profile.one_line }}</td>
+                    <td>{{ rank.count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-12">
+        <div class="text-center">
+            <ul class="pagination justify-content-center">
+                {% for i in page_count %}
+                    {% ifequal current_page i %}
+                    <li class="page-item active"><a class="page-link" href="{% url 'ranking' i %}">{{ i }}</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="{% url 'ranking' i %}">{{ i }}</a></li>
+                    {% endifequal %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

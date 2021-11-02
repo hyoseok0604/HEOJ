@@ -1,0 +1,21 @@
+{% extends "base_not_login.html" %}
+
+{% block title%}로그인{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+{% if user.is_authenticated %}
+<p><a href="/logout">로그아웃<a> 후 이용해주세요.</p>
+{% else %}
+    {% load crispy_forms_tags %}
+    <h1>로그인</h1>
+    <form method="POST">
+    {% csrf_token %}
+    {{ login_form|crispy }}
+    <button class="btn btn-primary" type="submit">로그인</button>
+    </form>
+    <p class="text-center">계정이 없으신가요? <a href="/register">회원가입</a>.</p>
+{% endif %}
+</div>
+
+{% endblock %}

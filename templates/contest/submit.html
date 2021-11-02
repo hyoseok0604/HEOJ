@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}대회 목록{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="py-3">
+        <ul class="nav nav-tabs">
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'contest' contest.pk %}">정보</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'contest_problemset' contest.pk %}">문제</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link active" href="#">제출</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'contest_status' contest.pk %}">채점 현황</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'contest_mystatus' contest.pk %}">내 제출</a>
+            </li>
+            <li class="nav-item p-2 pb-0">
+                <a class="nav-link link-dark" href="{% url 'contest_scoreboard' contest.pk %}">스코어보드</a>
+            </li>
+        </ul>
+    </div>
+
+    {% load crispy_forms_tags %}
+    <form method="POST">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <textarea class="codemirror-textarea" name="code"></textarea>
+    <script>
+        var target = document.querySelector(".codemirror-textarea");
+        var editor = CodeMirror.fromTextArea(target, {
+            lineNumbers : true,
+            theme : "darcula",
+        })
+
+        document.querySelector("#id_language").addEventListener("change", (e)=>{
+            let extension = ['cpp', 'cpp', 'cpp', 'cpp', 'c', 'c', 'c', 'py', 'py', 'java', 'java'];
+            changeLanguage(extension[e.target.value]);
+        })
+        
+        function changeLanguage(language){
+            var info = CodeMirror.findModeByExtension(language);
+            if(info){
+                mode = info.mode;
+                spec = info.mime;
+            }
+
+            if(mode) {
+                editor.setOption("mode", spec);
+                CodeMirror.autoLoadMode(editor, mode);
+            }
+        }
+
+        window.onload = function() {
+            changeLanguage("cpp")
+        }
+    </script>
+    <button class="btn btn-primary mt-3" type="submit">제출</button>
+    </form>
+
+</div>
+{% endblock content %}
