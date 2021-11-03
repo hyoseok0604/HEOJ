@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
         ".ap-northeast-2.compute.amazonaws.com",
-        "3.35.244.67",
+        os.environ['PUBLIC_IP'],
 ]
 
 
@@ -97,11 +97,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'heoj',
-        'USER': 'jhsapps',
-        'PASSWORD': 'rkwkjanghs64;',
-        'HOST': 'heoj.cnqfy8kfensp.ap-northeast-2.rds.amazonaws.com',
-        'PORT': '5432',
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['DB_USER'],
+        'PASSWORD': os.environ['DB_PASSWORD'],
+        'HOST': os.environ['DB_HOST'],
+        'PORT': os.environ['DB_PORT'],
     }
 }
 
