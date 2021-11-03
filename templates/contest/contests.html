@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}대회 목록{% endblock title %}
+{% block title %}대회 목록 - {{ current_page }}페이지{% endblock title %}
 
 {% block content %}
 <div class="container py-5">
@@ -41,6 +41,19 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class="col-md-12">
+        <div class="text-center">
+            <ul class="pagination justify-content-center">
+                {% for i in page_count %}
+                    {% ifequal current_page i %}
+                    <li class="page-item active"><a class="page-link" href="{% url 'contests' i %}">{{ i }}</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="{% url 'contests' i %}">{{ i }}</a></li>
+                    {% endifequal %}
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 </div>
 

@@ -19,6 +19,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('contests', views.contests, name="contests"),
+    path('contests/<int:page>', views.contests, name="contests"),
     path('contest/<int:id>', views.contest, name="contest"),
     path('contest/<int:id>/problemset', views.contest_problemset, name="contest_problemset"),
     path('contest/<int:contest_id>/problem', views.contest_problem, name="contest_problem"),

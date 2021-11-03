@@ -8,15 +8,19 @@ import boto3
 import json
 
 # Create your views here.
-def contests(request):
+def contests(request, page=1):
     contest_before = Contest.objects.filter(start_time__gt=timezone.now()).order_by('start_time')
     contest_running = Contest.objects.filter(start_time__lte=timezone.now(), end_time__gte=timezone.now()).order_by('start_time')
     contest_after = Contest.objects.filter(end_time__lt=timezone.now()).order_by('-end_time')
+
+    page_count = (Contest.objects.all().count() + 19) // 20
     
     context = {
         "contest_before": contest_before,
         "contest_running": contest_running,
         "contest_after": contest_after,
+        "page_count": range(1, page_count+1),
+        "current_page" : page,
     }
 
     return render(request, 'contest/contests.html', context)
@@ -43,15 +47,22 @@ def contest_problemset(request, id):
 
     return render(request, 'contest/problemset.html', context)
 
-def contest_problem(request, contest_id, problem_id=0):
+def contest_problem(request, contest_id, problem_id=1):
     contest = Contest.objects.get(pk=contest_id)
+
+    if problem_id < 1 or problem_id > contest.problems.count():
+        return redirect('contest', contest_id)
+    
     problem = contest.problems.all()[problem_id-1]
+
+    contest_problem_title = string.ascii_uppercase[problem_id-1] + "번 " + problem.title
 
     context = {
         "contest": contest,
         "problem": problem,
         "examples": zip(problem.example_input, problem.example_output),
-        "problem_id": problem_id
+        "problem_id": problem_id,
+        "contest_problem_title": contest_problem_title,
     }
 
     return render(request, 'contest/problem.html', context)
