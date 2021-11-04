@@ -44,17 +44,17 @@
                     {% for status in statuses %}
                     <tr>
                         <td>
-			{% if status.author == user %}
-			    <a class="text-decoration-none" href="/submission/{{ status.id }}">{{ status.id }}</a>
-			{% else %}
-			    {{ status.id }}
-			{% endif %}
-			</td>
+                        {% if status.author == user %}
+                            <a class="text-decoration-none" href="/submission/{{ status.id }}">{{ status.id }}</a>
+                        {% else %}
+                            {{ status.id }}
+                        {% endif %}
+                        </td>
                         <td>{{ status.author.username }}</td>
                         <td><a class="text-decoration-none" href="{% url 'problem' problem.number %}">{{ status.problem.number }}</a></td>
-			<td class="fw-bold {{ status.result|result_color }}">{{ status.get_result_display }}</td>
-			<td>{% if status.time != None %}{{ status.time }} <span class="text-danger">ms</span>{% endif %}</td>
-			<td>{% if status.memory != None %}{{ status.memory }} <span class="text-danger">KB</span>{% endif %}</td>
+                        <td class="fw-bold {{ status.result|result_color }}">{{ status.get_result_display }}</td>
+                        <td>{% if status.time != None %}{{ status.time }} <span class="text-danger">ms</span>{% endif %}</td>
+                        <td>{% if status.memory != None %}{{ status.memory }} <span class="text-danger">KB</span>{% endif %}</td>
                         <td>{{ status.get_language_display }}</td>
                         <td>{{ status.submit_time | date:"Y년 m월 d일 G:i" }}</td>
                     </th>
