@@ -91,7 +91,7 @@ def rank(request, id, lang=-1, page=1):
 
 def status(request, id, page=1):
     problem = Problem.objects.get(number=id)
-    statuses = problem.submission_set.order_by('-pk')[20*(page-1):20*page]
+    statuses = problem.submission_set.select_related('author').order_by('-pk')[20*(page-1):20*page]
     page_count = (problem.submission_set.count() + 19) // 20
     context = {
         "problem": problem,
