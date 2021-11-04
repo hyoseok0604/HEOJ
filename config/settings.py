@@ -27,8 +27,8 @@ SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = True
 
 ALLOWED_HOSTS = [
-        ".ap-northeast-2.compute.amazonaws.com",
-        os.environ['PUBLIC_IP'],
+    ".ap-northeast-2.compute.amazonaws.com",
+    os.environ['PUBLIC_IP'],
 ]
 
 
@@ -154,4 +154,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 INTERNAL_IPS = [
     '127.0.0.1',
+    os.environ['PUBLIC_IP'],
 ]
