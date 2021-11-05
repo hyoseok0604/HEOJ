@@ -3,6 +3,7 @@ from contest.models import Contest
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from contest.forms import SubmitSubmissionForm
+from problem.models import Submission
 import string
 import boto3
 import json
@@ -115,7 +116,20 @@ def contest_scoreboard(request, id, page=1):
     return render(request, 'contest/scoreboard.html')
 
 def contest_status(request, id, page=1):
-    return render(request, 'contest/status.html')
+    contest = Contest.objects.get(pk=id)
+    submissions = Submission.objects.filter(contest__exact=contest).order_by('-pk')[20*(page-1):20*page]
+    # submissions = contest.submission_set.order_by('-pk')[20*(page-1):20*page]
+
+    page_count = (Contest.objects.all().count() + 19) // 20
+
+    context = {
+        "contest": contest,
+        "statuses": submissions,
+        "page_count": range(1, page_count+1),
+        "current_page" : page,
+    }
+
+    return render(request, 'contest/status.html', context)
 
 def contest_mystatus(request, id, page=1):
     return render(request, 'contest/my_status.html')
