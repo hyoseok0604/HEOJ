@@ -4,6 +4,47 @@
 
 {% block content %}
 <div class="container py-5">
-    <h1>{{ profile.user.username }}</h1>
+    <h1 class="border-bottom py-2">{{ profile.user.username }}</h1>
+
+    <div>
+        <canvas id="submissionStatistics"></canvas>
+    </div>
 </div>
+
+<script>
+    const data = {
+        labels: [
+            {% for label in labels %}
+            "{{ label }}",
+            {% endfor %}
+        ],
+        datasets: [{
+            label: "제출 통계",
+            data: [
+            {% for count in counts %}
+            {{ count }}, 
+            {% endfor %}
+            ],
+            backgroundColor: [
+                "#66bb6a",
+                "#ef5350",
+                "#9fa8da",
+                "#bcaaa4",
+                "#ffab91",
+                "#ffe082",
+                "#b0bec5",
+            ]
+        }],
+    }
+
+    const config = {
+        type: 'pie',
+        data: data,
+    };
+
+    const submissionStatisticsChart = new Chart(
+        document.getElementById('submissionStatistics'),
+        config
+    );
+</script>
 {% endblock content %}
