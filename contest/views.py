@@ -91,7 +91,7 @@ def contest_submit(request, contest_id, problem_id=0):
                     "submission_id": submission.id,
                     "code": submission.code,
                     "lang": submission.language,
-                    "problem_id": id,
+                    "problem_id": submission.problem.number,
                     "time_limit": submission.problem.time_limit,
                     "memory_limit": submission.problem.memory_limit,
                 }
