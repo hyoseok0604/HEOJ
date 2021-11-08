@@ -18,7 +18,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('problemset', views.problemset, name='problemset'),
+    path('problemset/', views.problemset, name='problemset'),
     path('problemset/<int:page>', views.problemset, name='problemset'),
     path('problem/<int:id>', views.problem, name='problem'),
     path('submission/<int:id>', views.submission, name='submission'),

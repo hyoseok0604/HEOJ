@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('contests', views.contests, name="contests"),
+    path('contests/', views.contests, name="contests"),
     path('contests/<int:page>', views.contests, name="contests"),
     path('contest/<int:id>', views.contest, name="contest"),
     path('contest/<int:id>/problemset', views.contest_problemset, name="contest_problemset"),
