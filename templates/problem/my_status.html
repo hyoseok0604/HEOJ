@@ -62,9 +62,9 @@
             <ul class="pagination justify-content-center">
                 {% for i in page_count %}
                     {% ifequal current_page i %}
-                    <li class="page-item active"><a class="page-link" href="{% url 'problem_mystatus' i %}">{{ i }}</a></li>
+                    <li class="page-item active"><a class="page-link" href="{% url 'problem_mystatus' problem.number i %}">{{ i }}</a></li>
                     {% else %}
-                    <li class="page-item"><a class="page-link" href="{% url 'problem_mystatus' i %}">{{ i }}</a></li>
+                    <li class="page-item"><a class="page-link" href="{% url 'problem_mystatus' problem.number i %}">{{ i }}</a></li>
                     {% endifequal %}
                 {% endfor %}
             </ul>
