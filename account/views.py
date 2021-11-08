@@ -49,6 +49,9 @@ def profile(request, username):
     for result_query in result_queryset:
         result_counts[result_query['result']] = result_query['result__count']
 
+    result_labels = result_labels[2:]
+    result_counts = result_counts[2:]
+
     # 제출 언어별 통계
     language_queryset = profile.user.submission_set.values('language').annotate(Count('language'))
     language_labels = Submission.Language.labels
@@ -58,13 +61,21 @@ def profile(request, username):
 
     # 제출 언어별 결과 통계
     language_result_queryset = profile.user.submission_set.values('language', 'result').annotate(Count('language', 'result')) # 언어별 결과 통계
+    language_result_counts = [[0 for _ in result_labels] for _ in language_labels]
+
+    for language_result_query in language_result_queryset:
+        if language_result_query['result'] == Submission.Result.QUEUED or language_result_query['result'] == Submission.Result.RUNNING:
+            continue
+
+        language_result_counts[language_result_query['language']][language_result_query['result']-2] = language_result_query['language_result__count']
 
     context = {
         "profile": profile,
-        "result_labels": result_labels[2:],
-        "result_counts": result_counts[2:],
-        "language_counts": 
-
+        "result_labels": result_labels,
+        "result_counts": result_counts,
+        "language_labels": language_labels,
+        "language_counts": language_counts,
+        "language_result_counts": language_result_counts,
     }
 
     return render(request, "account/profile.html", context)
