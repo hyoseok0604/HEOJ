@@ -105,7 +105,7 @@ def my_status(request, id, page=1):
     problem = Problem.objects.get(number=id)
     submission_set = problem.submission_set
     statuses = submission_set.filter(author=request.user).order_by('-pk')[20*(page-1):20*page]
-    page_count = (submission_set.count() + 19) // 20
+    page_count = (submission_set.filter(author=request.user).count() + 19) // 20
     context = {
         "problem": problem,
         "statuses": statuses,
