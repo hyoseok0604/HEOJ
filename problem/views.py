@@ -75,7 +75,7 @@ def rank(request, id, lang=-1, page=1):
     ).order_by('time', 'memory', 'submit_time')[:1]
     statuses = problem.submission_set.filter(
         pk__in=Subquery(best_submission_per_user.values('pk'))
-    ).order_by('time', 'memory', 'submit_time')[20*(page-1):20*page]
+    ).select_related('author').order_by('time', 'memory', 'submit_time')[20*(page-1):20*page]
 
     page_count = (statuses.count() + 19) // 20
 
@@ -104,7 +104,7 @@ def status(request, id, page=1):
 def my_status(request, id, page=1):
     problem = Problem.objects.get(number=id)
     submission_set = problem.submission_set
-    statuses = submission_set.filter(author=request.user).order_by('-pk')[20*(page-1):20*page]
+    statuses = submission_set.filter(author=request.user).select_related('author').order_by('-pk')[20*(page-1):20*page]
     page_count = (submission_set.filter(author=request.user).count() + 19) // 20
     context = {
         "problem": problem,
