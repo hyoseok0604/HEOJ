@@ -84,6 +84,10 @@ def contest_submit(request, contest_id, problem_id=0):
 
             submission.save()
 
+            if submission.submit_time > contest.end_time:
+                submission.contest = None
+                submission.save()
+
             sqs = boto3.resource('sqs')
             queue = sqs.get_queue_by_name(QueueName='heoj_judge_queue.fifo')
             queue.send_message(MessageBody=json.dumps(
