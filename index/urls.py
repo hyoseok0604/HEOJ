@@ -18,5 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('', views.index)
+    path('', views.index),
+    path('loaderio-37ca3aa1162dbd8fabc43aa41eb8ee80/', views.loader_key),
 ]
