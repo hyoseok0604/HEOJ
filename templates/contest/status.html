@@ -53,7 +53,7 @@
                         {% endif %}
                         </td>
                         <td>{{ status.author.username }}</td>
-                        <td><a class="text-decoration-none" href="{% url 'contest_problem' contest_id number_wrapper|get_item:status.problem.number %}">{{ alpha_wrapper|get_item:status.problem.number }}</a></td>
+                        <td><a class="text-decoration-none" href="{% url 'contest_problem' contest.id number_wrapper|get_item:status.problem.number %}">{{ alpha_wrapper|get_item:status.problem.number }}</a></td>
                         <td class="fw-bold {{ status.result|result_color }}">{{ status.get_result_display }}</td>
                         <td>{% if status.time != None %}{{ status.time }} <span class="text-danger">ms</span>{% endif %}</td>
                         <td>{% if status.memory != None %}{{ status.memory }} <span class="text-danger">KB</span>{% endif %}</td>
