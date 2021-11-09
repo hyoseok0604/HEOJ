@@ -117,16 +117,29 @@ def contest_scoreboard(request, id, page=1):
 
 def contest_status(request, id, page=1):
     contest = Contest.objects.get(pk=id)
-    submissions = Submission.objects.filter(contest__exact=contest).order_by('-pk')[20*(page-1):20*page]
+    submissions = Submission.objects.filter(contest__exact=contest).select_related('author').order_by('-pk')[20*(page-1):20*page]
     # submissions = contest.submission_set.order_by('-pk')[20*(page-1):20*page]
 
-    page_count = (Contest.objects.all().count() + 19) // 20
+    problemset = zip(string.ascii_uppercase, contest.problems.all())
+
+    alpha_wrapper = dict()
+    number_wrapper = dict()
+
+    index = 1
+    for alpha, problem in problemset:
+        alpha_wrapper[problem.number] = alpha
+        number_wrapper[problem.number] = index
+        index = index + 1
+
+    page_count = (Submission.objects.filter(contest__exact=contest).count() + 19) // 20
 
     context = {
         "contest": contest,
         "statuses": submissions,
         "page_count": range(1, page_count+1),
-        "current_page" : page,
+        "current_page": page,
+        "alpha_wrapper": alpha_wrapper,
+        "number_wrapper": number_wrapper,
     }
 
     return render(request, 'contest/status.html', context)
