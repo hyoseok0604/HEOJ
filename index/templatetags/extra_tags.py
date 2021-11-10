@@ -1,4 +1,4 @@
-from django.db.models.functions import math
+import math
 from django.template.defaulttags import register
 from problem.models import Submission
 
