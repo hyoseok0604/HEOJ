@@ -1,3 +1,4 @@
+from django.db.models.functions import math
 from django.template.defaulttags import register
 from problem.models import Submission
 
@@ -13,3 +14,7 @@ def result_color(value):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+@register.filter
+def check_inf(value):
+    return value != math.inf

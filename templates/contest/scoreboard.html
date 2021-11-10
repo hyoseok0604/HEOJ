@@ -52,7 +52,7 @@
                         {% endif %}
                         </td>
                         <td style="text-align:center;">
-                        {% if contestant_line.total_penalty != "inf" %}
+                        {% if contestant_line.total_penalty|check_inf %}
                         {{ contestant_line.total_penalty }}
                         {% endif %}
                         </td>
