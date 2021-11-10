@@ -1,3 +1,5 @@
+import operator
+from django.db.models.aggregates import Count
 from django.forms.models import ModelChoiceField
 from contest.models import Contest
 from django.utils import timezone
@@ -7,6 +9,7 @@ from problem.models import Submission
 import string
 import boto3
 import json
+import math
 
 # Create your views here.
 def contests(request, page=1):
@@ -116,12 +119,102 @@ def contest_submit(request, contest_id, problem_id=0):
 
     return render(request, 'contest/submit.html', context)
 
+class ScoreboardContestant:
+    def __init__(self, username, problem_count) -> None:
+        self.rank = 0
+        self.username = username
+        self.solved_problem_count = 0
+        self.total_penalty = math.inf
+        self.problems = [ScoreboardProblem() for _ in range(problem_count)]
+
+class ScoreboardProblem:
+    def __init__(self) -> None:
+        self.try_count = 0
+        self.penalty = 0
+        self.solved = False
+
 def contest_scoreboard(request, id, page=1):
-    return render(request, 'contest/scoreboard.html')
+    contest = Contest.objects.get(pk=id)
+
+    submissions = Submission.objects.filter(contest__exact=contest)\
+                            .select_related('author', 'problem').order_by('-pk').all()
+    
+    problems = Contest.problems
+    problem_count = problems.count()
+    problem_number_to_index = dict()
+    index = 0
+    for problem in problems:
+        problem_number_to_index[problem.number] = index
+        index += 1
+    
+    contestants = Submission.objects.filter(contest__exact=contest).select_related('author').distinct('author')
+    contestant_count = contestants.count()
+    contestant_name_to_index = dict()
+    index = 0
+    for contestant in contestants:
+        contestant_name_to_index[contestant.author.username] = index
+        index += 1
+    
+    # 정답 여부..
+    # 패널티 계산..
+
+    # 스코어보드 대회 참가 인원 x 대회 문제 크기의 배열
+    # 시도 횟수, 패널티 정보가 필요함
+
+    scoreboard = [ScoreboardContestant(contestant.author.username, problem_count) for contestant in contestants]
+
+    for submission in submissions:
+        contestant_index = contestant_name_to_index[submission.author.username]
+        problem_index = problem_number_to_index[submission.problem.number]
+
+        contestant_line = scoreboard[contestant_index]
+        problem_cell = contestant_line.problems[problem_index]
+
+        if submission.result == Submission.Result.ACCEPTED:
+            if not problem_cell.solved:
+                if problem_cell.penalty == math.inf:
+                    problem_cell.penalty = 0
+                
+                problem_cell.try_count += 1 # 제출 횟수 1 증가
+                problem_cell.penalty += (submission.submit_time - contest.start_time).total_seconds // 60 # 정답 코드의 패널티 계산
+                problem_cell.solved = True # 더이상의 패널티를 계산하지 않도록
+
+                contestant_line.solved_problem_count += 1
+                contestant_line.total_penalty += problem_cell.penalty
+        elif submission.result == Submission.Result.QUEUED or \
+            submission.result == Submission.Result.RUNNING: # 해당 결과를 가진 제출들은 무시
+            pass
+        else:
+            if not problem_cell.solved:
+                if problem_cell.penalty == math.inf:
+                    problem_cell.penalty = 0
+                
+                problem_cell.try_count += 1 # 제출 횟수 1 증가
+                problem_cell.penalty += 10 # 제출 패널티 = 10분
+
+    # 해결한 문제 내림차순 - 패널티 오름차순 으로 정렬
+    scoreboard.sort(key=operator.attrgetter('total_penalty'))
+    scoreboard.sort(key=operator.attrgetter('solved_problem_count'), reverse=True)
+
+    scoreboard[0].rank = 1
+    for index in range(1, contestant_count):
+        before = scoreboard[index-1]
+        now = scoreboard[index]
+        if before.total_penalty == now.total_penalty and before.solved_problem_count == now.solved_problem_count:
+            scoreboard[index].rank = before.rank
+        else:
+            scoreboard[index].rank = index + 1
+
+    context = {
+        "scoreboard": scoreboard,
+        "alphastr": string.ascii_uppercase[:problem_count],
+    }
+
+    return render(request, 'contest/scoreboard.html', context)
 
 def contest_status(request, id, page=1):
     contest = Contest.objects.get(pk=id)
-    submissions = Submission.objects.filter(contest__exact=contest).select_related('author').order_by('-pk')[20*(page-1):20*page]
+    submissions = Submission.objects.filter(contest__exact=contest).select_related('author', 'problem').order_by('-pk')[20*(page-1):20*page]
     # submissions = contest.submission_set.order_by('-pk')[20*(page-1):20*page]
 
     problemset = zip(string.ascii_uppercase, contest.problems.all())
