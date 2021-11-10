@@ -14,14 +14,14 @@
 <script>
     const data = {
         labels: [
-            {% for label in labels %}
+            {% for label in result_labels %}
             "{{ label }}",
             {% endfor %}
         ],
         datasets: [{
             label: "제출 통계",
             data: [
-            {% for count in counts %}
+            {% for count in result_counts %}
             {{ count }}, 
             {% endfor %}
             ],

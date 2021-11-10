@@ -240,4 +240,30 @@ def contest_status(request, id, page=1):
     return render(request, 'contest/status.html', context)
 
 def contest_mystatus(request, id, page=1):
-    return render(request, 'contest/my_status.html')
+    contest = Contest.objects.get(pk=id)
+    submissions = Submission.objects.filter(contest=contest, author=request.user).select_related('author', 'problem').order_by('-pk')[20*(page-1):20*page]
+    # submissions = contest.submission_set.order_by('-pk')[20*(page-1):20*page]
+
+    problemset = zip(string.ascii_uppercase, contest.problems.all())
+
+    alpha_wrapper = dict()
+    number_wrapper = dict()
+
+    index = 1
+    for alpha, problem in problemset:
+        alpha_wrapper[problem.number] = alpha
+        number_wrapper[problem.number] = index
+        index = index + 1
+
+    page_count = (Submission.objects.filter(contest=contest, author=request.user).count() + 19) // 20
+
+    context = {
+        "contest": contest,
+        "statuses": submissions,
+        "page_count": range(1, page_count+1),
+        "current_page": page,
+        "alpha_wrapper": alpha_wrapper,
+        "number_wrapper": number_wrapper,
+    }
+    
+    return render(request, 'contest/my_status.html', context)
