@@ -139,7 +139,7 @@ def contest_scoreboard(request, id, page=1):
     submissions = Submission.objects.filter(contest__exact=contest)\
                             .select_related('author', 'problem').order_by('-pk').all()
     
-    problems = Contest.problems
+    problems = contest.problems.all()
     problem_count = problems.count()
     problem_number_to_index = dict()
     index = 0
@@ -206,6 +206,7 @@ def contest_scoreboard(request, id, page=1):
             scoreboard[index].rank = index + 1
 
     context = {
+        "contest": contest,
         "scoreboard": scoreboard,
         "alphastr": string.ascii_uppercase[:problem_count],
     }

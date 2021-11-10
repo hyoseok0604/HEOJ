@@ -44,12 +44,20 @@
                 <tbody>
                     {% for contestant_line in scoreboard %}
                     <tr>
-                        <td>{{ contestant_line.rank }}</td>
+                        <td style="text-align:center;">{{ contestant_line.rank }}</td>
                         <td>{{ contestant_line.username }}</td>
-                        <td>{{ contestant_line.solved_problem_count }}</td>
-                        <td>{{ contestant_line.total_penalty }}</td>
+                        <td style="text-align:center;">
+                        {% if contestant_line.solved_problem_count != 0 %}
+                        {{ contestant_line.solved_problem_count }}
+                        {% endif %}
+                        </td>
+                        <td style="text-align:center;">
+                        {% if contestant_line.total_penalty != "inf" %}
+                        {{ contestant_line.total_penalty }}
+                        {% endif %}
+                        </td>
                         {% for problem in contestant_line.problems %}
-                        <td>{{ problem.try_count }}</td>
+                        <td style="text-align:center;">{{ problem.try_count }}</td>
                         {% endfor %}
                     {% endfor %}
                 </tbody>
