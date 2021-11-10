@@ -27,6 +27,9 @@
         </ul>
     </div>
 
+    {% if before_contest %}
+    <p>대회 시작 전입니다.</p>
+    {% else %}
     <div class="table-responsive py-3">
         <table class="table table-bordered table-striped">
             <thead>
@@ -47,7 +50,7 @@
             </tbody>
         </table>
     </div>
-
+    {% endif %}
 
 </div>
 {% endblock content %}

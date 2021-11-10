@@ -10,7 +10,7 @@ import json
 
 # Create your views here.
 def problemset(request, page=1):
-    problems = Problem.objects.order_by('-number')[20*(page-1):20*page]
+    problems = Problem.objects.filter(is_public=True, visible=True).order_by('-number')[20*(page-1):20*page]
     page_count = (Problem.objects.all().count() + 19) // 20
     context = {
         "problems": problems,

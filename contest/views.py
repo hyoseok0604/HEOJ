@@ -44,9 +44,12 @@ def contest_problemset(request, id):
 
     problemset = zip(string.ascii_uppercase, contest.problems.all())
 
+    before_contest = timezone.now() < contest.start_time
+
     context = {
         "contest": contest,
         "problemset": problemset,
+        "before_contest": before_contest,
     }
 
     return render(request, 'contest/problemset.html', context)
@@ -117,7 +120,7 @@ def contest_submit(request, contest_id, problem_id=0):
         "contest": contest,
         "problemset": problemset,
         "form": form,
-        "before_contest": before_contest
+        "before_contest": before_contest,
     }
 
     return render(request, 'contest/submit.html', context)
