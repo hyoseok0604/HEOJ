@@ -193,7 +193,9 @@ def contest_scoreboard(request, id, page=1):
     scoreboard.sort(key=operator.attrgetter('total_penalty'))
     scoreboard.sort(key=operator.attrgetter('solved_problem_count'), reverse=True)
 
-    scoreboard[0].rank = 1
+    if len(scoreboard) > 0:
+        scoreboard[0].rank = 1
+    
     for index in range(1, contestant_count):
         before = scoreboard[index-1]
         now = scoreboard[index]
