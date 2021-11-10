@@ -176,7 +176,7 @@ def contest_scoreboard(request, id, page=1):
                     problem_cell.penalty = 0
                 
                 problem_cell.try_count += 1 # 제출 횟수 1 증가
-                problem_cell.penalty += (submission.submit_time - contest.start_time).total_seconds // 60 # 정답 코드의 패널티 계산
+                problem_cell.penalty += (submission.submit_time - contest.start_time).total_seconds() // 60 # 정답 코드의 패널티 계산
                 problem_cell.solved = True # 더이상의 패널티를 계산하지 않도록
 
                 contestant_line.solved_problem_count += 1
