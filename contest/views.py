@@ -130,7 +130,7 @@ class ScoreboardContestant:
 class ScoreboardProblem:
     def __init__(self) -> None:
         self.try_count = 0
-        self.penalty = 0
+        self.penalty = math.inf
         self.solved = False
 
 def contest_scoreboard(request, id, page=1):
@@ -178,6 +178,9 @@ def contest_scoreboard(request, id, page=1):
                 problem_cell.try_count += 1 # 제출 횟수 1 증가
                 problem_cell.penalty += (submission.submit_time - contest.start_time).total_seconds() // 60 # 정답 코드의 패널티 계산
                 problem_cell.solved = True # 더이상의 패널티를 계산하지 않도록
+
+                if contestant_line.total_penalty == math.inf:
+                    contestant_line.total_penalty = 0
 
                 contestant_line.solved_problem_count += 1
                 contestant_line.total_penalty += problem_cell.penalty
