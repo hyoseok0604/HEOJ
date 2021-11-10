@@ -75,6 +75,8 @@ def contest_submit(request, contest_id, problem_id=0):
     contest = Contest.objects.get(pk=contest_id)
     problemset = contest.problems.all()
 
+    before_contest = timezone.now() < contest.start_time
+
     if request.method == 'POST':
         form = SubmitSubmissionForm(request.POST)
         if form.is_valid():
@@ -87,7 +89,7 @@ def contest_submit(request, contest_id, problem_id=0):
 
             submission.save()
 
-            if submission.submit_time > contest.end_time:
+            if submission.submit_time > contest.end_time or submission.submit_time < contest.start_time:
                 submission.contest = None
                 submission.save()
 
@@ -115,6 +117,7 @@ def contest_submit(request, contest_id, problem_id=0):
         "contest": contest,
         "problemset": problemset,
         "form": form,
+        "before_contest": before_contest
     }
 
     return render(request, 'contest/submit.html', context)

@@ -27,6 +27,9 @@
         </ul>
     </div>
 
+    {% if before_contest %}
+    <p>대회 시작 전입니다.</p>
+    {% else %}
     {% load crispy_forms_tags %}
     <form method="POST">
     {% csrf_token %}
@@ -63,6 +66,6 @@
     </script>
     <button class="btn btn-primary mt-3" type="submit">제출</button>
     </form>
-
+    {% endif %}
 </div>
 {% endblock content %}
