@@ -111,7 +111,7 @@ def contest_submit(request, contest_id, problem_id=1):
 
             return redirect('contest_mystatus', id=contest_id)
     else:
-        form = SubmitSubmissionForm(initial={'problem': problemset[problem_id].pk})
+        form = SubmitSubmissionForm(initial={'problem': problemset[problem_id-1].pk})
 
     form.fields["problem"].queryset = problemset
     form.fields["problem"].empty_label = None
