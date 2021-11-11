@@ -57,7 +57,8 @@
                         {% endif %}
                         </td>
                         {% for problem in contestant_line.problems %}
-                        <td class="{% if problem.solved %}table-success{% elif problem.try_count != 0 %}table-danger{% else %}{% endif %}" style="text-align:center;"><p class="my-0">{{ problem.try_count }}</p><p class="my-0">{{ problem.penalty|floatformat:"0" }}</p></td>
+                        <td class="{% if problem.solved %}table-success{% elif problem.try_count != 0 %}table-danger{% else %}{% endif %}" style="text-align:center;">
+                        {% if problem.try_count != 0 %}<p class="my-0">{{ problem.try_count }}</p><p class="my-0">{{ problem.penalty|floatformat:"0" }}</p>{% endif %}</td>
                         {% endfor %}
                     {% endfor %}
                 </tbody>
