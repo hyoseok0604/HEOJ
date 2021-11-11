@@ -111,7 +111,7 @@ def contest_submit(request, contest_id, problem_id=0):
 
             return redirect('contest_mystatus', id=contest_id)
     else:
-        form = SubmitSubmissionForm()
+        form = SubmitSubmissionForm(initial={'problem': problemset[problem_id].pk})
 
     form.fields["problem"].queryset = problemset
     form.fields["problem"].empty_label = None
@@ -143,7 +143,7 @@ def contest_scoreboard(request, id, page=1):
     contest = Contest.objects.get(pk=id)
 
     submissions = Submission.objects.filter(contest__exact=contest)\
-                            .select_related('author', 'problem').order_by('-pk').all()
+                            .select_related('author', 'problem').order_by('pk').all()
     
     problems = contest.problems.all()
     problem_count = problems.count()
