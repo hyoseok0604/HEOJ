@@ -74,7 +74,7 @@ def contest_problem(request, contest_id, problem_id=1):
 
     return render(request, 'contest/problem.html', context)
 
-def contest_submit(request, contest_id, problem_id=0):
+def contest_submit(request, contest_id, problem_id=1):
     contest = Contest.objects.get(pk=contest_id)
     problemset = contest.problems.all()
 
