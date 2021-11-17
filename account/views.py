@@ -45,7 +45,7 @@ def profile(request, username):
     # 제출 결과별 통계
     result_queryset = profile.user.submission_set.values('result').annotate(Count('result'))
     result_labels = Submission.Result.labels
-    result_counts = [0 for _ in range(result_labels)]
+    result_counts = [0 for _ in result_labels]
     for result_query in result_queryset:
         result_counts[result_query['result']] = result_query['result__count']
 
@@ -55,19 +55,19 @@ def profile(request, username):
     # 제출 언어별 통계
     language_queryset = profile.user.submission_set.values('language').annotate(Count('language'))
     language_labels = Submission.Language.labels
-    language_counts = [0 for _ in range(language_labels)]
+    language_counts = [0 for _ in language_labels]
     for language_query in language_queryset:
         language_counts[language_query['language']] = language_query['language__count']
 
     # 제출 언어별 결과 통계
-    language_result_queryset = profile.user.submission_set.values('language', 'result').annotate(Count('language', 'result')) # 언어별 결과 통계
+    language_result_queryset = profile.user.submission_set.values('language', 'result').annotate(Count('language'), Count('result')) # 언어별 결과 통계
     language_result_counts = [[0 for _ in result_labels] for _ in language_labels]
 
     for language_result_query in language_result_queryset:
         if language_result_query['result'] == Submission.Result.QUEUED or language_result_query['result'] == Submission.Result.RUNNING:
             continue
 
-        language_result_counts[language_result_query['language']][language_result_query['result']-2] = language_result_query['language_result__count']
+        language_result_counts[language_result_query['language']][language_result_query['result']-2] = language_result_query['pk__count']
 
     context = {
         "profile": profile,
