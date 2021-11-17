@@ -49,6 +49,8 @@ class Submission(models.Model):
         PYTHON3 = 8, _('Python3')
         JAVA8 = 9, _('Java 8')
         JAVA11 = 10, _('Java 11')
+        PYPY2 = 11, _('PyPy2')
+        PYPY3 = 12, _('PyPy3')
 
     class Result(models.IntegerChoices):
         QUEUED = 0, _('채점 준비 중')
