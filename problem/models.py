@@ -51,6 +51,8 @@ class Submission(models.Model):
         JAVA11 = 10, _('Java 11')
         PYPY2 = 11, _('PyPy2')
         PYPY3 = 12, _('PyPy3')
+        CSHARP = 13, _('C# (임시)')
+        NODEJS = 14, _('node.js (임시)')
 
     class Result(models.IntegerChoices):
         QUEUED = 0, _('채점 준비 중')
