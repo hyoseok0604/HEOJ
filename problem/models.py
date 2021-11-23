@@ -19,6 +19,7 @@ class Problem(models.Model):
     input_description = models.TextField(null=True, blank=True)
     output_description = models.TextField(null=True, blank=True)
     limit_description = models.TextField(null=True, blank=True)
+    example_description = models.TextField(null=True, blank=True)
     
     author = ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
@@ -34,7 +35,10 @@ class Problem(models.Model):
     visible = models.BooleanField()
 
     class Meta:
-        ordering = ['pk']
+        ordering = ['number']
+
+    def __str__(self):
+        return "%s번 %s" % (self.number, self.title)
 
 class Submission(models.Model):
     class Language(models.IntegerChoices):

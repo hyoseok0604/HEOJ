@@ -54,27 +54,27 @@
 
     <div class="col-md-12 py-3">
         <h3 class="border-bottom pb-2">문제</h3>
-        <p>{{ problem.description }}</p>
+        <p>{{ problem.description|safe }}</p>
     </div>
 
     {% if problem.input_description %}
     <div class="col-md-12 py-3">
         <h3 class="border-bottom pb-2">입력</h3>
-        <p>{{ problem.input_description }}</p>
+        <p>{{ problem.input_description|safe }}</p>
     </div>
     {% endif %}
 
     {% if problem.output_description %}
     <div class="col-md-12 py-3">
         <h3 class="border-bottom pb-2">출력</h3>
-        <p>{{ problem.output_description }}</p>
+        <p>{{ problem.output_description|safe }}</p>
     </div>
     {% endif %}
 
     {% if problem.limit_description %}
     <div class="col-md-12 py-3">
         <h3 class="border-bottom pb-2">제한</h3>
-        <p>{{ problem.limit_description }}</p>
+        <p>{{ problem.limit_description|safe }}</p>
     </div>
     {% endif %}
     
@@ -86,7 +86,7 @@
                     <h3 class="border-bottom pb-2">예제 입력 {{ forloop.counter }}
                         <button type="button" class="btn btn-link btn-copy text-decoration-none p-0" data-clipboard-target="#sample-input-{{ forloop.counter }}">복사</button>
                     </h3>
-                    <pre class="sampledata p-2 fs-6" id="sample-input-{{ forloop.counter }}">{{ input }}</pre>
+                    <pre class="sampledata p-2 fs-6" id="sample-input-{{ forloop.counter }}">{{ input|safe }}</pre>
                 </section>
             </div>
             <div class="col-md-6">
@@ -94,12 +94,19 @@
                     <h3 class="border-bottom pb-2">예제 출력 {{ forloop.counter }}
                         <button type="button" class="btn btn-link btn-copy text-decoration-none p-0" data-clipboard-target="#sample-output-{{ forloop.counter }}">복사</button>
                     </h3>
-                    <pre class="sampledata p-2 fs-6" id="sample-output-{{ forloop.counter }}">{{ output }}</pre>
+                    <pre class="sampledata p-2 fs-6" id="sample-output-{{ forloop.counter }}">{{ output|safe }}</pre>
                 </section>
             </div>
         </div>
         {% endfor %}
     </div>
+
+    {% if problem.example_description %}
+    <div class="col-md-12 py-3">
+	<h3 class="border-bottom pb-2">예제 설명</h3>
+	<p>{{ problem.example_description|safe }}</p>
+    </div>
+    {% endif %}
 </div>
 
 <script>
