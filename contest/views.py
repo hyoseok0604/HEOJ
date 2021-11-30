@@ -277,25 +277,28 @@ def contest_mystatus(request, id, page=1):
     return render(request, 'contest/my_status.html', context)
 
 def contest_statistics(request, id):
-    contest: Contest = Contest.obejcts.get(pk=id)
+    contest: Contest = Contest.objects.get(pk=id)
 
     submissions = Submission.objects.filter(contest__exact=contest)\
                             .select_related('author', 'problem').order_by('pk').all()
     problemset = contest.problems.all()
 
-    statistics = [[0 for _ in range(problemset.count() + 2)] for _ in range(len(Submission.Result.labels[2:]) + len(Submission.Language.labels) + 2)]
+    column_count = problemset.count() + 2
+    row_count = len(Submission.Result.labels[2:]) + len(Submission.Language.labels) + 3
+
+    statistics = [[0 for _ in range(problemset.count() + 2)] for _ in range(len(Submission.Result.labels[2:]) + len(Submission.Language.labels) + 3)]
 
     row_wrapper_result = dict()
     row_wrapper_language = dict()
     column_wrapper = dict()
 
     index = 1
-    for problem in range(problemset):
+    for problem in problemset:
         column_wrapper[problem.number] = index
         index += 1
     
     index = 1
-    for value in Submission.Result.values:
+    for value in Submission.Result.values[2:]:
         row_wrapper_result[value] = index
         index += 1
     
@@ -304,10 +307,36 @@ def contest_statistics(request, id):
         index += 1
     
     for submission in submissions:
-        statistics[row_wrapper_result[submission.result]][submission.problem.number] += 1
-        statistics[row_wrapper_language[submission.language]][submission.problem.number] += 1
+        statistics[row_wrapper_result[submission.result]][column_wrapper[submission.problem.number]] += 1
+        statistics[row_wrapper_language[submission.language]][column_wrapper[submission.problem.number]] += 1
+
+    for value, label in Submission.Result.choices[2:]:
+        statistics[row_wrapper_result[value]][0] = label
+    for value, label in Submission.Language.choices:
+        statistics[row_wrapper_language[value]][0] = label
+
+    statistics[0][0] = statistics[row_count-1][column_count-1] = statistics[row_count-2][column_count-1] = ""
+
+    for i in range(1, row_count - 2):
+        for j in range(1, column_count-1):
+            statistics[i][column_count-1] += statistics[i][j]
+            if i < len(Submission.Result.labels[2:]) + 1:
+                statistics[row_count-1][j] += statistics[i][j]
+
+    for i in range(1, column_count - 1):
+        statistics[row_count-2][i] = "{}%".format(round(statistics[1][i] / statistics[row_count-1][i] * 100, 2))
+
+    statistics[row_count-2][0] = "정답률"
+
+    statistics[0][column_count-1] = statistics[row_count-1][0] = "합계"
+
+    index = 1
+    for alpha in string.ascii_uppercase[:problemset.count()]:
+        statistics[0][index] = alpha
+        index += 1
 
     context = {
+        "contest": contest,
         "statistics": statistics,
     }
 

@@ -41,13 +41,13 @@
                 {% endif %}
                     <tr>
                     {% for column in row %}
-                        {% if forloop.counter == 1 %}
+                        {% if forloop.parentloop.counter == 1 or forloop.counter == 1 %}
                         <th>
                         {% else %}
                         <td>
                         {% endif %}
-                        column
-                        {% if forloop.counter == 1 %}
+			{{ column }}
+                        {% if forloop.parentloop.counter == 1 %}
                         </th>
                         {% else %}
                     </td>
