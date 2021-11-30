@@ -32,4 +32,5 @@ urlpatterns = [
     path('contest/<int:id>/mystatus/<int:page>', views.contest_mystatus, name="contest_mystatus"),
     path('contest/<int:id>/scoreboard', views.contest_scoreboard, name="contest_scoreboard"),
     path('contest/<int:id>/scoreboard/<int:page>', views.contest_scoreboard, name="contest_scoreboard"),
+    path('contest/<ind:id>/statistics', views.contest_statistics, name="contest_statistics"),
 ]
