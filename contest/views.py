@@ -275,3 +275,40 @@ def contest_mystatus(request, id, page=1):
     }
     
     return render(request, 'contest/my_status.html', context)
+
+def contest_statistics(request, id):
+    contest: Contest = Contest.obejcts.get(pk=id)
+
+    submissions = Submission.objects.filter(contest__exact=contest)\
+                            .select_related('author', 'problem').order_by('pk').all()
+    problemset = contest.problems.all()
+
+    statistics = [[0 for _ in range(problemset.count() + 2)] for _ in range(len(Submission.Result.labels[2:]) + len(Submission.Language.labels) + 2)]
+
+    row_wrapper_result = dict()
+    row_wrapper_language = dict()
+    column_wrapper = dict()
+
+    index = 1
+    for problem in range(problemset):
+        column_wrapper[problem.number] = index
+        index += 1
+    
+    index = 1
+    for value in Submission.Result.values:
+        row_wrapper_result[value] = index
+        index += 1
+    
+    for value in Submission.Language.values:
+        row_wrapper_language[value] = index
+        index += 1
+    
+    for submission in submissions:
+        statistics[row_wrapper_result[submission.result]][submission.problem.number] += 1
+        statistics[row_wrapper_language[submission.language]][submission.problem.number] += 1
+
+    context = {
+        "statistics": statistics,
+    }
+
+    return render(request, 'contest/statistics.html', context)
